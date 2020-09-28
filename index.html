@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>MCP Map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed&family=Lora&display=swap" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+
+      h2 {
+        font-family: 'Barlow Semi Condensed', sans-serif;
+        color: #0a5395;
+      }
+
+      p, a {
+        font-family: 'Lora', serif;
+        font-weight:bold;
+      }
+
+  
+      
+    </style>
+  </head>
+  <body>
+    <div id='map'></div>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoibWptMjIzMCIsImEiOiJja2V1Y2U2NXMwMXEwMnFrMGJzZHAwanUwIn0.M_rQQNZEq5EYocY1RBIVMA'; // replace this with your access token
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mjm2230/ckfbto1l44qwm19lnnpq2rjmz', // replace this with your style URL
+      zoom: 4,
+    });
+
+    var hoveredPartnerId = null;
+    var clickedStateId = null;
+    var clickedPartnerId = null;
+
+    map.on('load', function () {
+      map.addSource('projectedpartners', {
+         "type": 'geojson',
+         "data" : '/projected-partners.geojson'
+      });
+
+      map.addSource('projectedstates', {
+         "type": 'geojson',
+         "data" : '/projectedstates.geojson'
+      });
+  
+      map.addLayer({
+      'id': 'partner-fills',
+      'type': 'circle',
+      'source' : 'projectedpartners',
+      'layout': {},
+      'paint': {
+      'circle-color': '#fba538',
+      'circle-radius': 7,
+      'circle-opacity': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      1,
+      0
+      ]
+    }
+    });
+
+     map.addLayer({
+      'id': 'partner-click',
+      'type': 'circle',
+      'source' : 'projectedpartners',
+      'layout': {},
+      'paint': {
+      'circle-color': '#0a5395',
+      'circle-radius': 9,
+      'circle-opacity': [
+      'case',
+      ['boolean', ['feature-state', 'click'], false],
+      1,
+      0
+      ]
+    }
+    });
+    
+    map.addLayer({
+      'id': 'state-fills',
+      'type': 'fill',
+      'source' : 'projectedstates',
+      'layout': {},
+      'paint': {
+      'fill-color': [
+      'case',
+      ['boolean', ['feature-state', 'click'], false],
+      '#fba538',
+      '#f8f8f6'
+      ]
+    }
+
+  });
+
+    map.moveLayer('state-fills', 'partners')
+    map.moveLayer('state-boundaries', 'partner-fills')
+    map.moveLayer('partners', 'partner-fills')
+
+   
+
+    map.on('mousemove', 'partner-fills', function (e) {
+    if (e.features.length > 0) {
+        if (hoveredPartnerId) {
+          map.setFeatureState(
+          { source: 'projectedpartners',id: hoveredPartnerId },
+          { hover: false }
+          );
+          
+        }
+        hoveredPartnerId = e.features[0].id;
+        map.setFeatureState(
+          { source: 'projectedpartners', id: hoveredPartnerId },
+          { hover: true }
+        );
+      }
+    });
+
+    map.on('mouseleave', 'partner-fills', function () {
+      if (hoveredPartnerId) {
+        map.setFeatureState(
+          { source: 'projectedpartners',id: hoveredPartnerId },
+          { hover: false }
+        );
+      }
+      hoveredPartnerId = null;
+    });
+  }); 
+
+    map.on('click', function(e) {
+      var features = map.queryRenderedFeatures(e.point, {
+        layers: ['partners', 'state-fills', 'partner-click'] // replace this with the name of the layer
+        
+      });
+      if (!features.length) {
+        return;
+      }
+      var feature = features[1]
+      console.log(feature)
+
+      var popup = new mapboxgl.Popup({ offset: [0, -15] })
+        if (feature.properties.report){
+          popup.setLngLat(feature.geometry.coordinates)
+          popup.setHTML('<h2>' + feature.properties.name + '</h2><p>' + feature.properties.type + '</p><p>' + feature.properties.number + '</p><p>'+ feature.properties.date + '</p> <a href="' + feature.properties.report + '"target="_blank">Report</a>')
+          popup.addTo(map);
+        }
+        else {
+          popup.setLngLat(feature.geometry.coordinates)
+        popup.setHTML('<h2>' + feature.properties.name + '</h2><p>' + feature.properties.type + '</p><p>' + feature.properties.number + '</p><p>'+ feature.properties.date + '</p>')
+        popup.addTo(map);
+        }
+
+        if (features[2].properties.STATUS == true ) {
+            if (clickedStateId) {
+                map.setFeatureState(
+                    { source: 'projectedstates', id: clickedStateId },
+                    { click: false }
+                );
+            }
+            clickedStateId = features[2].id;
+            map.setFeatureState(
+                { source: 'projectedstates', id: clickedStateId },
+                { click: true }
+            );
+        
+          if (clickedPartnerId) {
+              map.setFeatureState(
+                  { source: 'projectedpartners', id: clickedPartnerId },
+                  { click: false }
+              );
+          }
+          clickedPartnerId = features[0].id;
+          map.setFeatureState(
+              { source: 'projectedpartners', id: clickedPartnerId },
+              { click: true }
+          );
+        }
+
+    });
+
+    </script>
+  </body>
+</html>
