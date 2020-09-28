@@ -39,13 +39,25 @@
     <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoibWptMjIzMCIsImEiOiJja2V1Y2U2NXMwMXEwMnFrMGJzZHAwanUwIn0.M_rQQNZEq5EYocY1RBIVMA'; // replace this with your access token
   
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mjm2230/ckfbto1l44qwm19lnnpq2rjmz', // replace this with your style URL
-      zoom: 4,
-      maxZoom: 8,
-      minZoom: 4
-  }); 
+    var mq = window.matchMedia( "(max-width: 300px)" );
+
+    if (mq.matches){
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mjm2230/ckfbto1l44qwm19lnnpq2rjmz', // replace this with your style URL
+        zoom: 2,
+        interactive: false
+      }); //mobile
+      
+    } else {
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mjm2230/ckfbto1l44qwm19lnnpq2rjmz', // replace this with your style URL
+        zoom: 4,
+        maxZoom: 8,
+        minZoom: 4
+    }); //desktop
+    }; 
   
 
     var hoveredPartnerId = null;
