@@ -34,7 +34,7 @@
 ,
 {"type":"Feature","properties":{"date":"August - November 2020","name":"Battlefield Middle School ","number":"5 teachers empowered","report":"https://docs.google.com/document/d/1wCbjcehOJjLSxA4ysej7G_KkMtJ5Y_2MCjRJyVk4EI8/edit?usp=sharing","type":"Suburban public school"},"geometry":{"type":"Point","coordinates":[14.763773926959793,0.988750500393445]},"id":"18","bbox":[14.763773926959793,0.988750500393445,14.763773926959793,0.988750500393445]}
 ,
-{"type":"Feature","properties":{"name":"Frontier Central School District","type":"Suburban public school district","number":"52  teachers empowered","date":"May - October 2020","report":"https://docs.google.com/document/d/1y6z3cUxPZooY9Ydj8rqUpGRKqgU1HMXos5_SVqTtyA8/edit?usp=sharing"},"geometry":{"type":"Point","coordinates":[12.935734328202084,5.171112780702213]},"id":"19","bbox":[12.935734328202084,5.171112780702213,12.935734328202084,5.171112780702213]}
+{"type":"Feature","properties":{"name":"Frontier Central School District","type":"Suburban public school district","number":"52  teachers empowered","date":"May 2020 - January 2021","report":"https://docs.google.com/document/d/1y6z3cUxPZooY9Ydj8rqUpGRKqgU1HMXos5_SVqTtyA8/edit?usp=sharing"},"geometry":{"type":"Point","coordinates":[12.935734328202084,5.171112780702213]},"id":"19","bbox":[12.935734328202084,5.171112780702213,12.935734328202084,5.171112780702213]}
 ,
 {"type":"Feature","properties":{"date":"October 2020 - February 2021","name":"Lake Hamilton School District","number":"18 teachers empowered","report":"","type":"Suburban public school district"},"geometry":{"type":"Point","coordinates":[2.840394619394295,-4.27652172789477]},"id":"20","bbox":[2.840394619394295,-4.27652172789477,2.840394619394295,-4.27652172789477]}
 ,
